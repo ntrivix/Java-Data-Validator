@@ -1,6 +1,7 @@
-package trivix.toast;
+package test.toast;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
@@ -33,7 +34,7 @@ public class Toast extends JDialog {
 	private final float OPACITY_INCREMENT = 0.05f;
 	private final int FADE_REFRESH_RATE = 20;
 	private final int WINDOW_RADIUS = 15;
-	private final int CHARACTER_LENGTH_MULTIPLIER = 7;
+	private final int CHARACTER_LENGTH_MULTIPLIER = 15;
 	private final int DISTANCE_FROM_PARENT_TOP = 100;	
 	
 	private JFrame mOwner;
@@ -63,11 +64,13 @@ public class Toast extends JDialog {
         setUndecorated(true);
         setFocusableWindowState(false);
         setModalityType(ModalityType.MODELESS);
-        setSize(mText.length() * CHARACTER_LENGTH_MULTIPLIER, 25);
+        setSize(mText.length() * CHARACTER_LENGTH_MULTIPLIER, 35);
         getContentPane().setBackground(mBackgroundColor);
         
         JLabel label = new JLabel(mText);
         label.setForeground(mForegroundColor);
+
+        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 22));
         add(label);
     }
 	
@@ -187,22 +190,5 @@ public class Toast extends JDialog {
             	}
             }
         }).start();
-    }
-
-    public static void main(String... args){
-    	final JFrame frame = new JFrame();
-    	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    	frame.setSize(new Dimension(500, 300));
-    	JButton b = new JButton("Toast!");
-    	
-    	b.addActionListener(new ActionListener() {		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Toast.makeText(frame, "Annotations were successfully saved.", Style.SUCCESS).display();
-		}
-	});
-    	
-    	frame.add(b);
-    	frame.setVisible(true);        
     }
 }

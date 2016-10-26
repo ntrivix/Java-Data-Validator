@@ -1,0 +1,9 @@
+trivix.validator
+trivix.validator.dataValidation
+trivix.validator.dataValidation.errors
+trivix.validator.dataValidation.errors.handler
+trivix.validator.dataValidation.exceptions
+trivix.validator.dataValidation.interfaces
+trivix.validator.errorHandlers
+trivix.validator.inputs
+trivix.validator.rules

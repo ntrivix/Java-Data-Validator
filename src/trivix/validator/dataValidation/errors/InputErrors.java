@@ -57,5 +57,14 @@ public class InputErrors {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder errors = new StringBuilder();
+		for (ValidationError validationError : getErrors()) {
+			errors.append(validationError.getErrorMessage()+"\n");
+		}
+		return errors.toString();
+	}
+	
 	
 }

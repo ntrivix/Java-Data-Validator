@@ -139,7 +139,8 @@ public abstract class AbstractValidatorInput<ObjectType, ValueType> implements V
 
 	@Override
 	public void addErrorHandler(ErrorHandler handler) {
-		errorHandlers.add(handler);
+		if (handler != null)
+			errorHandlers.add(handler);
 	}	
 	
 

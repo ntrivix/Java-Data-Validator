@@ -30,8 +30,8 @@ public abstract class AbstractErrorHandler<OutputObjectType> implements ErrorHan
 
 
 	@Override
-	public InputErrors[] getErrors() {
-		return (InputErrors[]) errors.toArray();
+	public Set<InputErrors> getErrors() {
+		return errors;
 	}
 
 	@Override
@@ -45,6 +45,17 @@ public abstract class AbstractErrorHandler<OutputObjectType> implements ErrorHan
 		else
 			this.errorState();
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder e = new StringBuilder();
+		for (InputErrors inputErrors : errors) {
+			e.append(inputErrors.toString());
+		}
+		return e.toString();
+	}
+	
+	
 	
 	
 	
