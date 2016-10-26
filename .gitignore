@@ -4,6 +4,7 @@
 .mtj.tmp/
 /src/test/*
 /doc/*
+/doc/
 
 # Package Files #
 *.jar
