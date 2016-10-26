@@ -31,8 +31,13 @@ public abstract class AbstractValidatorInput<ObjectType, ValueType> implements V
 		errors = new InputErrors(this);
 	}
 
+	/**
+	 * Create new validator input for input name and object
+	 * @param name
+	 * @param object
+	 */
 	public AbstractValidatorInput(String name, ObjectType object) {
-		super();
+		this();
 		this.name = name;
 		this.objectOfValidation = object;
 	}
@@ -63,6 +68,9 @@ public abstract class AbstractValidatorInput<ObjectType, ValueType> implements V
 			customMessages.put(rule, message);		
 	}
 	
+	/**
+	 * this methode is called before validation
+	 */
 	protected void beforeValidation(){
 		
 	}
@@ -90,7 +98,9 @@ public abstract class AbstractValidatorInput<ObjectType, ValueType> implements V
 	}
 	
 
-
+	/**
+	 * this method is called after validation
+	 */
 	protected void afterValidation(){
 			
 	}
@@ -133,6 +143,7 @@ public abstract class AbstractValidatorInput<ObjectType, ValueType> implements V
 		return name;
 	}
 
+	@Override
 	public void setInputName(String name) {
 		this.name = name;
 	}
@@ -143,7 +154,9 @@ public abstract class AbstractValidatorInput<ObjectType, ValueType> implements V
 			errorHandlers.add(handler);
 	}	
 	
-
+	/**
+	 * Notify error handlers about possible changes
+	 */
 	private void notifyErrrorHandelrs(){
 		for (ErrorHandler errorHandler : errorHandlers) {
 			errorHandler.addInputErrors(this.errors);

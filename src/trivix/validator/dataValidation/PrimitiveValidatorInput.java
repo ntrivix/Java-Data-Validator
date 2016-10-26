@@ -19,7 +19,6 @@ public class PrimitiveValidatorInput<Type> extends AbstractValidatorInput<Type, 
 
 	@Override
 	public void setOnChangeValidate(boolean onchange) {
-		// TODO Auto-generated method stub
 		
 	}
 

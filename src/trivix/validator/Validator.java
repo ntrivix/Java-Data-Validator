@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import trivix.validator.dataValidation.ValidationRuleFacade;
+import trivix.validator.dataValidation.ValidationRuleFactory;
 import trivix.validator.dataValidation.errors.InputErrors;
 import trivix.validator.dataValidation.errors.handler.ErrorHandler;
 import trivix.validator.dataValidation.exceptions.ErrorHandlerNotResolved;
@@ -110,7 +110,8 @@ public class Validator {
 	public InputErrors[] errors() {
 		List<InputErrors> e = new LinkedList<>();
 		for (ValidatorInputInterface input : inputFields) {
-			e.add(input.errors());
+			if (!input.isValid())
+				e.add(input.errors());
 		}
 		return e.toArray(new InputErrors[e.size()]);
 	}
@@ -151,11 +152,32 @@ public class Validator {
 		return this.add(toValidate, fieldName, rules, null, errorContainer);
 	}
 	
+	/**
+	 * 
+	 * @param toValidateobject that should be validated
+	 * @param fieldName This name will be used when building error message
+	 * @param rules List of rules in format ruleCode:parameter1,parameter2...
+	 * @param customMessages custom error messages, respect to order of the rules
+	 * @return
+	 * @throws ValidatorInputNotResolved
+	 * @throws RuleNotExists
+	 */
 	public Validator add(Object toValidate, String fieldName, String[] rules, String[] customMessages)
 			throws ValidatorInputNotResolved, RuleNotExists {
 		return this.add(toValidate, fieldName, rules, customMessages, null);
 	}
 	
+	/**
+	 * 
+	 * @param toValidate object that should be validated
+	 * @param fieldName This name will be used when building error message
+	 * @param rules List of rules in format ruleCode:parameter1,parameter2...
+	 * @param customMessages custom error messages, respect to order of the rules
+	 * @param errorHandler Object that will be responsible for handling and outputing errors
+	 * @return Validator object
+	 * @throws ValidatorInputNotResolved
+	 * @throws RuleNotExists
+	 */
 	public Validator add(Object toValidate, String fieldName, String[] rules, String[] customMessages,
 			ErrorHandler errorHandler) throws ValidatorInputNotResolved, RuleNotExists {
 		ValidatorInputInterface input = resolveInputForClass(toValidate.getClass());
@@ -168,7 +190,7 @@ public class Validator {
 			String m = "";
 			if (customMessages != null && customMessages.length > i)
 				m = customMessages[i++];
-			ValidationRule rule = ValidationRuleFacade.getValidator(ruleStr);
+			ValidationRule rule = ValidationRuleFactory.getValidationRule(ruleStr);
 			if (rule.canApplyToObject(input.getValueToValidate()))
 				input.addRule(rule, m);
 		}
@@ -176,6 +198,12 @@ public class Validator {
 		return this;
 	}
 
+	
+	/**
+	 * 
+	 * @param input Input that will be validated
+	 * @return
+	 */
 	public Validator add(ValidatorInputInterface input) {
 		this.inputFields.add(input);
 		input.setOnChangeValidate(dynamicValidation);
@@ -266,7 +294,7 @@ public class Validator {
 			Constructor<?> cons;
 			cons = defaultFormErrorHandler.getConstructor(container.getClass());
 			ErrorHandler errorHandler = (ErrorHandler) cons.newInstance(container);
-			return this.errorContainer(errorHandler);
+			return this.errorsContainer(errorHandler);
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new ErrorHandlerNotResolved(defaultFormErrorHandler, container);
 		}
@@ -279,9 +307,19 @@ public class Validator {
 	 * @param handler
 	 * @return Validator instance
 	 */
-	public Validator errorContainer(ErrorHandler handler){
+	public Validator errorsContainer(ErrorHandler handler){
 		formErrorHandler = handler;
 		this.updateFormErrorHandler();
+		return this;
+	}
+	
+	/**
+	 * Change default class that will be used for resolving input error handler
+	 * @param errorHandlerClass new handler class
+	 * @return Validator
+	 */
+	public Validator setDefaultInputErrorHandler(Class errorHandlerClass){
+		this.defaultInputErrorHandler = errorHandlerClass;
 		return this;
 	}
 
